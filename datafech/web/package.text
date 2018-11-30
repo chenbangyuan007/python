@@ -2,4 +2,3 @@ pip install mysql.connector
 pip install DBUtils
 pip install requests
 pip install pyquery
-hello
