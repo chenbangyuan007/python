@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div id="app">
+    <el-container>
+        <el-header height="100">数据查询系统</el-header>
+        <el-main>
+            <el-form :inline="true" :model="query" ref="queryForm" class="demo-form-inline">
+
+                <el-form-item label="国家">
+                    <el-select     filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">
+                        <el-option
+                                v-for="item in query.countryList"
+                                :key="item[3]"
+                                :label="item[1]"
+                                :value="item[3]">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="联赛">
+                    <el-select   clearable filterable v-model="query.gamesId" placeholder="选择联赛" @change="changeGames">
+                        <el-option
+                                v-for="item in query.games"
+                                :key="item[0]"
+                                :label="item[1]"
+                                :value="item[1]">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="赛季">
+                    <el-select  clearable   filterable v-model="query.year" placeholder="选择赛季" @change="changeYear">
+                        <el-option
+                                v-for="item in query.years"
+                                :key="item[0]"
+                                :label="item[1]"
+                                :value="item[1]">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <br/>
+
+                <el-form-item label="主队">
+                    <el-select clearable
+                               v-model="query.firstTeam"
+                            filterable
+                            reserve-keyword
+                            placeholder="输入主队名称"
+                            >
+                        <el-option
+                                v-for="item in query.firstTeams"
+                                :key="item[0]"
+                                :label="item[1]"
+                                :value="item[0]">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="客队">
+                    <el-select clearable
+                               v-model="query.secondTeam"
+                            filterable
+                            reserve-keyword
+                            placeholder="输入客队名称"
+                            >
+                        <el-option
+                                v-for="item in query.secondTeams"
+                                :key="item[0]"
+                                :label="item[1]"
+                                :value="item[0]">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <br/>
+                <el-form-item label="时间">
+                    <el-date-picker
+                            v-model="query.bisaiTime"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            :picker-options="pickerOptions2">
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                    <el-button @click="resetForm">重置</el-button>
+                </el-form-item>
+            </el-form>
+            <template>
+                <el-table
+                        :data="query.queryData"
+                        style="width: 100%">
+                    <el-table-column
+                            prop="date"
+                            label="比赛时间"
+                            width="140">
+                    </el-table-column>
+                    <el-table-column
+                            prop="firstT"
+                            label="主队"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="secondT"
+                            label="客队"
+                            width="120">
+                    </el-table-column>
+                    <el-table-column
+                            prop="full_score"
+                            label="全场比分"
+                            width="100">
+                    </el-table-column>
+                    <el-table-column
+                            prop="half_score"
+                            label="半场比分"
+                            width="100">
+                    </el-table-column>
+
+                    <el-table-column label="让球" align="center">
+                        <el-table-column
+                                prop="full_concede"
+                                label="全场">
+                        </el-table-column>
+                        <el-table-column
+                                prop="half_concede"
+                                label="半场">
+                        </el-table-column>
+                    </el-table-column>
+                    <el-table-column label="大小" align="center"  >
+                        <el-table-column
+                                prop="full_bigsmall"
+                                label="全场">
+                        </el-table-column>
+                        <el-table-column
+                                prop="half_bigsmall"
+                                label="半场">
+                        </el-table-column>
+                    </el-table-column>
+                    <el-table-column
+                            prop="bocaiGs"
+                            label="博彩公司">
+                    </el-table-column>
+                    <el-table-column
+                            prop="pankouName"
+                            label="盘口">
+                    </el-table-column>
+                    <el-table-column label="初盘" align="center">
+                        <el-table-column
+                                prop="first_zhudui"
+                                label="主队">
+                        </el-table-column>
+                        <el-table-column
+                                prop="first_pankou"
+                                label="盘口">
+                        </el-table-column>
+                        <el-table-column
+                                prop="first_cidui"
+                                label="客队">
+                        </el-table-column>
+                    </el-table-column>
+                    <el-table-column label="终盘" align="center">
+                        <el-table-column
+                                prop="finally_zhudui"
+                                label="主队">
+                        </el-table-column>
+                        <el-table-column
+                                prop="finally_pankou"
+                                label="盘口">
+                        </el-table-column>
+                        <el-table-column
+                                prop="finally_cidui"
+                                label="客队">
+                        </el-table-column>
+                    </el-table-column>
+                </el-table>
+            </template>
+            <template>
+                <div align="right">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="query.currentPage"
+                            :page-sizes="[2,10, 20, 50, 100]"
+                            :page-size="query.pageSize"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="query.total">
+                    </el-pagination>
+                </div>
+            </template>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                visible: false,
+                loading: false,
+                query: {
+                    countryList: [],
+                    games: [],
+                    years: [],
+                    firstTeams:[],
+                    secondTeams:[],
+                    queryData:[],
+                    countryId: undefined,
+                    gamesId: undefined,
+                    year: undefined,
+                    bisaiTime: undefined,
+                    firstTeam:undefined,
+                    secondTeam:undefined,
+                    currentPage:1,
+                    pageSize:10,
+                    total:0
+                },
+                pickerOptions2: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick: function(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick: function(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick: function(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        },
+                    },
+                        {
+                            text: '最近一年',
+                            onClick: function(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        },
+                        {
+                            text: '最近二年',
+                            onClick: function(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 2);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        },
+                        {
+                            text: '最近五年',
+                            onClick: function(picker) {
+                                const end = new Date();
+                                const start = new Date();
+                                start.setTime(start.getTime() - 3600 * 1000 * 24 * 365 * 5);
+                                picker.$emit('pick', [start, end]);
+                            }
+                        }
+                    ]
+                }
+            };
+        },
+        mounted: function () {
+            this.$http.get('/findCountry').then(function (res) {
+                this.query.countryList = res.body;
+            }, function () {
+                console.log('请求失败处理');
+            });
+        }
+        ,
+        methods: {
+            onSubmit: function () {;
+                this.$http.post('/query/'+this.query.currentPage+'/'+this.query.pageSize,
+                    {
+                        begin: this.query.bisaiTime?this.query.bisaiTime[0]:null,
+                        end:this.query.bisaiTime?this.query.bisaiTime[1]:null,
+                        firstTeam: this.query.firstTeam,
+                        secondTeam: this.query.secondTeam
+                    },
+                    {
+                        emulateJSON: true
+                    }
+                ).then(function (res) {
+                    datas = new Array();
+                    var id = undefined;
+                    dataList = res.body.data;
+                    for(var i=0;i<dataList.length;i++) {
+                        var item = dataList[i];
+                        if(id && id==item[0]){
+                            datas.push({
+                                bocaiGs: item[10],
+                                first_zhudui: item[11],
+                                first_pankou: item[12],
+                                first_cidui: item[13],
+                                finally_zhudui: item[14],
+                                finally_pankou: item[15],
+                                finally_cidui: item[16],
+                                pankouName: item[17],
+                            });
+                            continue;
+                        }
+                        id=item[0];
+                        datas.push({
+                            id: item[0],
+                            date: item[1],
+                            firstT: item[2],
+                            secondT: item[3],
+                            full_score: item[4],
+                            full_concede: item[5],
+                            full_bigsmall:item[6],
+                            half_score: item[7],
+                            half_concede: item[8],
+                            half_bigsmall:item[9],
+                            bocaiGs: item[10],
+                            first_zhudui: item[11],
+                            first_pankou: item[12],
+                            first_cidui: item[13],
+                            finally_zhudui: item[14],
+                            finally_pankou: item[15],
+                            finally_cidui: item[16],
+                            pankouName: item[17],
+                        });
+                    }
+                    this.query.queryData = datas
+                    this.query.total=res.body.total
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            },
+            changeCountry: function () {
+                this.query.gamesId = undefined;
+                this.query.firstTeam = undefined;
+                this.query.secondTeam = undefined;
+                this.$http.get('/findGames/' + this.query.countryId).then(function (res) {
+                    this.query.games = res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+                this.query.year = undefined;
+                this.$http.get('/findYears/' + this.query.countryId).then(function (res) {
+                    this.query.years = res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+                this.$http.get('/findTeam',{params:{countryId:this.query.countryId}}).then(function (res) {
+                    this.query.firstTeams = res.body
+                    this.query.secondTeams= res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            },
+            resetForm:function () {
+                this.query.countryId = undefined;
+                this.query.gamesId = undefined;
+                this.query.year = undefined;
+                this.query.bisaiTime = undefined;
+                this.query.firstTeam = undefined;
+                this.query.secondTeam = undefined;
+            },
+            handleSizeChange:function(val) {
+               this.query.pageSize=val;
+               this.query.currentPage=1;
+               this.onSubmit()
+            },
+            handleCurrentChange:function(val) {
+                this.query.currentPage=val;
+                this.onSubmit()
+            },
+            changeGames:function (v) {
+                this.query.year=undefined;
+                this.query.firstTeam=undefined;
+                this.query.secondTeam=undefined;
+                this.$http.get('/findTeam',{params:{countryId:this.query.countryId,gameId:this.query.gamesId}}).then(function (res) {
+                    this.query.firstTeams = res.body
+                    this.query.secondTeams= res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            },
+            changeYear:function (v) {
+                this.query.firstTeam=undefined;
+                this.query.secondTeam=undefined;
+                this.$http.get('/findTeam',{params:{countryId:this.query.countryId,gameId:this.query.gamesId,yearsStr:this.query.year}}).then(function (res) {
+                    this.query.firstTeams = res.body
+                    this.query.secondTeams= res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            }
+        }
+    });
+</script>
+</html>
