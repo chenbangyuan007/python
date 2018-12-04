@@ -10,7 +10,7 @@
     <el-container>
         <el-header height="100">查询系统</el-header>
         <el-main>
-            <el-form :inline="true" :model="query" ref="queryForm" class="demo-form-inline">
+            <el-form :inline="true" :rules="rules" :model="query" ref="queryForm" class="demo-form-inline">
 
                 <!--<el-form-item label="国家">-->
                     <!--<el-select     filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">-->
@@ -44,7 +44,7 @@
                 <!--</el-form-item>-->
                 <!--<br/>-->
 
-                <el-form-item label="主队">
+                <el-form-item label="主队" prop="firstTeam">
                     <el-select clearable
                                v-model="query.firstTeam"
                             filterable
@@ -63,7 +63,7 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="客队">
+                <el-form-item label="客队" prop="secondTeam">
                     <el-select clearable
                                v-model="query.secondTeam"
                             filterable
@@ -95,6 +95,7 @@
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                     <el-button @click="resetForm">重置</el-button>
+                    <el-button type="primary" @click="onSubmit">查询</el-button>
                 </el-form-item>
             </el-form>
             <template>
@@ -214,6 +215,13 @@
             return {
                 visible: false,
                 loading: false,
+                rules: {
+                    firstTeam: [
+                        {required: true, message: '请输入主队名称', trigger: 'blur'}
+                    ],secondTeam: [
+                        {required: true, message: '请输入客队队名称', trigger: 'blur'}
+                    ],
+                },
                 query: {
                     countryList: [],
                     games: [],
@@ -345,6 +353,11 @@
                 return drect+"("+data+")";
             },
             onSubmit: function () {;
+                this.$refs["queryForm"].validate(function () {
+                    if (!valid) {
+                        return false;
+                    }
+                });
                 this.$http.post('/query/'+this.query.currentPage+'/'+this.query.pageSize,
                     {
                         begin: this.query.bisaiTime?this.query.bisaiTime[0]:null,
