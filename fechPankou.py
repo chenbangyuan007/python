@@ -3,7 +3,7 @@ import request
 from pyquery import PyQuery as pq
 
 def fetchPankou(bisaiId):
-    # dao.delete("delete from  pankou where bisaiId=%s",(bisaiId,))
+    dao.delete("delete from  pankou where bisaiId=%s",(bisaiId,))
     print(bisaiId)
     url = 'http://vip.win0168.com/AsianOdds_n.aspx?id='+str(bisaiId)
     html=request.sendRequest(url,"vip.win0168.com")

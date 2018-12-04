@@ -184,9 +184,9 @@
                                 label="客队">
                         </el-table-column>
                     </el-table-column>
-                    <el-table-column label="操作" align="center">
+                    <el-table-column label="操作" align="center" prop="id">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                            <el-button @click="handleClick(scope.row)" v-if="scope.row.id" type="text" size="small">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -494,6 +494,9 @@
                 }, function () {
                     console.log('请求失败处理');
                 });
+            },
+            handleClick:function (row) {
+                window.open("http://vip.win0168.com/AsianOdds_n.aspx?id="+row.id)
             }
             // changeGames:function (v) {
             //     this.query.year=undefined;
