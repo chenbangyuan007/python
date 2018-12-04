@@ -31,22 +31,27 @@ def findYear(countryId):
 
 @app.route('/findTeam')
 def findTeam():
-    countryId = request.args.get('countryId')
-    gameId = request.args.get('gameId')
-    years = request.args.get('yearsStr')
+    teamName = request.args.get('teamName')
+    firstTeamId=request.args.get('firstTeamId')
     teams = []
     parameter=()
-    sql="select t.id,t.name,p.`name`,g.country,p.years from team t left join game_pirod p on t.game_id=p.bsid left join games g on g.id=p.game_id where 1=1 and "
-    if countryId != None:
-        sql =sql +"g.id=%s"
-        parameter=parameter+(countryId,)
-    if gameId!=None:
-        sql =sql +" and p.`name`=%s"
-        parameter=parameter+(gameId,)
-    if years!=None:
-        sql =sql +" and p.`years`=%s"
-        parameter=parameter+(years,)
+    sql="select t.id,t.name from team t  where 1=1 and "
+    if teamName!=None:
+        sql =sql +" t.`name` like %s"
+        parameter=parameter+("%"+teamName+"%",)
+    if firstTeamId!=None:
+        sql =sql +" and t.id!=%s"
+        parameter=parameter+(firstTeamId,)
     sql=sql+" group by t.id"
+    teams=dao.selectAll(sql,parameter)
+    return jsonify(teams)
+
+@app.route('/findKeTeam')
+def findKeTeam():
+    firstTeamId=request.args.get('firstTeamId')
+    teams = []
+    parameter=(firstTeamId,)
+    sql="select t.id,t.name from team t left join game_data gd on gd.second_team_id=t.id where gd.first_team_id=%s group by t.id"
     teams=dao.selectAll(sql,parameter)
     return jsonify(teams)
 
