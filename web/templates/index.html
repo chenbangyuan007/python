@@ -297,6 +297,53 @@
         }
         ,
         methods: {
+            resovle:function (data) {
+                if(data && data<=0.75) {
+                    return "超低水"
+                }
+                if(data && data>0.75 &&  data<=0.85) {
+                    return "低水"
+                }
+                if(data && data>0.85 &&  data<=0.95) {
+                    return "中水"
+                }
+                if(data && data>0.95 &&  data<=1.08) {
+                    return "高水"
+                }
+                if(data && data>1.08) {
+                    return "超高水"
+                }
+            },
+            resovlePankou:function (data) {
+                if(!data) {
+                    console.log(data);
+                    return data;
+                }
+                var drect="";
+                var number = data.indexOf("让");
+                if(number!=-1) {
+                    drect = "-";
+                }
+                data=data.substr(number+1,data.length)
+                if(data && data=='半球') {
+                    drect=drect+"0.5"
+                }
+                if(data && data=='半/一') {
+                    drect=drect+"0.75"
+                }
+                if(data && (data=='平'||data=='平手')) {
+                    drect=drect+"0"
+                }
+                if(data && data=='平/半') {
+                    drect=drect+"0.25"
+                }
+                if(data && data=='一/球半') {
+                    drect=drect+"1.75"
+                }    if(data && data=='一球') {
+                    drect=drect+"1"
+                }
+                return drect+"("+data+")";
+            },
             onSubmit: function () {;
                 this.$http.post('/query/'+this.query.currentPage+'/'+this.query.pageSize,
                     {
@@ -314,15 +361,21 @@
                     dataList = res.body.data;
                     for(var i=0;i<dataList.length;i++) {
                         var item = dataList[i];
+                        var first_zhudui=this.resovle(item[11])
+                        var first_cidui=this.resovle(item[13])
+                        var finally_zhudui=this.resovle(item[14])
+                        var finally_cidui=this.resovle(item[16])
+                        var first_pankou=this.resovlePankou(item[12])
+                        var finally_pankou=this.resovlePankou(item[15])
                         if(id && id==item[0]){
                             datas.push({
                                 bocaiGs: item[10],
-                                first_zhudui: item[11],
-                                first_pankou: item[12],
-                                first_cidui: item[13],
-                                finally_zhudui: item[14],
-                                finally_pankou: item[15],
-                                finally_cidui: item[16],
+                                first_zhudui: first_zhudui,
+                                first_pankou: first_pankou,
+                                first_cidui: first_cidui,
+                                finally_zhudui: finally_zhudui,
+                                finally_pankou: finally_pankou,
+                                finally_cidui: finally_cidui,
                                 pankouName: item[17],
                             });
                             continue;
@@ -340,12 +393,12 @@
                             half_concede: item[8],
                             half_bigsmall:item[9],
                             bocaiGs: item[10],
-                            first_zhudui: item[11],
-                            first_pankou: item[12],
-                            first_cidui: item[13],
-                            finally_zhudui: item[14],
-                            finally_pankou: item[15],
-                            finally_cidui: item[16],
+                            first_zhudui: first_zhudui,
+                            first_pankou: first_pankou,
+                            first_cidui: first_cidui,
+                            finally_zhudui: finally_zhudui,
+                            finally_pankou: finally_pankou,
+                            finally_cidui: finally_cidui,
                             pankouName: item[17],
                         });
                     }
