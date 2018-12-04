@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask import render_template
 import dao;
+import fechPankou
 
 app = Flask(__name__)
 
@@ -49,12 +50,21 @@ def findTeam():
 @app.route('/findKeTeam')
 def findKeTeam():
     firstTeamId=request.args.get('firstTeamId')
-    teams = []
     parameter=(firstTeamId,)
     sql="select t.id,t.name from team t left join game_data gd on gd.second_team_id=t.id where gd.first_team_id=%s group by t.id"
     teams=dao.selectAll(sql,parameter)
     return jsonify(teams)
 
+@app.route('/syscPankou')
+def syscPankou():
+    firstTeamId=request.args.get('firstTeamId')
+    secondTeamsId=request.args.get('secondTeamsId')
+    parameter=(firstTeamId,secondTeamsId)
+    sql="select gd.bisai_id from game_data gd where gd.first_team_id=%s and gd.second_team_id=%s"
+    teams=dao.selectAll(sql,parameter)
+    for i in range(len(teams)):
+        fechPankou.fetchPankou(teams[i][0])
+    return jsonify(("同步成功",))
 
 @app.route('/query/<page>/<pageSize>', methods=["POST"])
 def query(page, pageSize):

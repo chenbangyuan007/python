@@ -95,7 +95,7 @@
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit">查询</el-button>
                     <el-button @click="resetForm">重置</el-button>
-                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                    <el-button type="primary" @click="syscPankou">同步博彩公司盘口</el-button>
                 </el-form-item>
             </el-form>
             <template>
@@ -353,7 +353,7 @@
                 return drect+"("+data+")";
             },
             onSubmit: function () {;
-                this.$refs["queryForm"].validate(function () {
+                this.$refs["queryForm"].validate(function (valid) {
                     if (!valid) {
                         return false;
                     }
@@ -475,6 +475,18 @@
                 this.query.currentPage=val;
                 this.onSubmit()
             },
+            syscPankou:function () {
+                this.$http.get('/syscPankou',{params:{firstTeamId:this.query.firstTeam,secondTeamsId:this.query.secondTeam}}).then(function (res) {
+                    this.$alert('同步成功', '提示', {
+                        confirmButtonText: '确定',
+                        callback: function () {
+                        }
+                    });
+                    this.onSubmit()
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            }
             // changeGames:function (v) {
             //     this.query.year=undefined;
             //     this.query.firstTeam=undefined;
