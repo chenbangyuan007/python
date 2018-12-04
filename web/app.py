@@ -35,6 +35,9 @@ def findTeam():
     teamName = request.args.get('teamName')
     firstTeamId=request.args.get('firstTeamId')
     teams = []
+    if teamName==None or teamName=='':
+        return jsonify(teams)
+
     parameter=()
     sql="select t.id,t.name from team t  where 1=1 and "
     if teamName!=None:

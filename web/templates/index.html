@@ -184,6 +184,11 @@
                                 label="客队">
                         </el-table-column>
                     </el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                        </template>
+                    </el-table-column>
                 </el-table>
             </template>
             <template>
@@ -204,7 +209,7 @@
 </div>
 </body>
 <!-- import Vue before Element -->
-<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.5.17/vue.min.js"></script>
 <!-- import JavaScript -->
 <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
@@ -444,6 +449,9 @@
             //     });
             // },
             findFirstTeam:function (v) {
+                if(v && v.length<1) {
+                    return
+                }
                 this.$http.get('/findTeam',{params:{teamName:v}}).then(function (res) {
                     this.query.firstTeams = res.body
                 }, function () {
