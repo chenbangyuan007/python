@@ -2,7 +2,8 @@ from flask import Flask, jsonify, request
 from flask import render_template
 import dao;
 import fechPankou
-
+import games
+import fetchGames
 app = Flask(__name__)
 
 
@@ -67,6 +68,33 @@ def syscPankou():
     teams=dao.selectAll(sql,parameter)
     for i in range(len(teams)):
         fechPankou.fetchPankou(teams[i][0])
+    return jsonify(("同步成功",))
+
+@app.route('/syscBaseData')
+def syscBaseData():
+    games.fechCountry()
+    return jsonify(("同步成功",))
+
+@app.route('/syscBisaiData')
+def syscBisaiData():
+    countryId=request.args.get('countryId')
+    gamesId=request.args.get('gamesId')
+    year=request.args.get('year')
+    pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s and years=%s order by bsid asc",(countryId,gamesId,year))
+    for j in range(len(pirod)):
+        year=pirod[j][0]
+        game_id=pirod[j][1]
+        lv=pirod[j][2]
+        lv1=pirod[j][3]
+        domine=None
+        if lv==1 and lv1==0:
+            domine='League'
+        elif lv==1 and lv1==1:
+            domine='SubLeague'
+        elif lv==2 and lv1==0:
+            domine='CupMatch'
+        print(game_id,domine,year)
+        fetchGames.fetchGames(game_id,domine,year)
     return jsonify(("同步成功",))
 
 @app.route('/query/<page>/<pageSize>', methods=["POST"])

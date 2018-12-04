@@ -7,205 +7,230 @@
 </head>
 <body>
 <div id="app">
-    <el-container>
-        <el-header height="100">查询系统</el-header>
-        <el-main>
-            <el-form :inline="true" :rules="rules" :model="query" ref="queryForm" class="demo-form-inline">
+    <el-tabs type="border-card">
+        <el-tab-pane label="数据查询">
+            <el-container>
+                <el-header height="100">数据查询</el-header>
+                <el-main>
+                    <el-form :inline="true" :rules="rules" :model="query" ref="queryForm" class="demo-form-inline">
 
-                <!--<el-form-item label="国家">-->
-                    <!--<el-select     filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">-->
-                        <!--<el-option-->
-                                <!--v-for="item in query.countryList"-->
-                                <!--:key="item[3]"-->
-                                <!--:label="item[1]"-->
-                                <!--:value="item[3]">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="联赛">-->
-                    <!--<el-select   clearable filterable v-model="query.gamesId" placeholder="选择联赛" @change="changeGames">-->
-                        <!--<el-option-->
-                                <!--v-for="item in query.games"-->
-                                <!--:key="item[0]"-->
-                                <!--:label="item[1]"-->
-                                <!--:value="item[1]">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<el-form-item label="赛季">-->
-                    <!--<el-select  clearable   filterable v-model="query.year" placeholder="选择赛季" @change="changeYear">-->
-                        <!--<el-option-->
-                                <!--v-for="item in query.years"-->
-                                <!--:key="item[0]"-->
-                                <!--:label="item[1]"-->
-                                <!--:value="item[1]">-->
-                        <!--</el-option>-->
-                    <!--</el-select>-->
-                <!--</el-form-item>-->
-                <!--<br/>-->
-
-                <el-form-item label="主队" prop="firstTeam">
-                    <el-select clearable
-                               v-model="query.firstTeam"
-                            filterable
-                            reserve-keyword
-                               remote
-                               :remote-method="findFirstTeam"
-                               @change="findKeTeam"
-                            placeholder="输入主队名称"
+                        <el-form-item label="主队" prop="firstTeam">
+                            <el-select clearable
+                                       v-model="query.firstTeam"
+                                       filterable
+                                       reserve-keyword
+                                       remote
+                                       :remote-method="findFirstTeam"
+                                       @change="findKeTeam"
+                                       placeholder="输入主队名称"
                             >
-                        <el-option
-                                v-for="item in query.firstTeams"
-                                :key="item[0]"
-                                :label="item[1]"
-                                :value="item[0]">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
+                                <el-option
+                                        v-for="item in query.firstTeams"
+                                        :key="item[0]"
+                                        :label="item[1]"
+                                        :value="item[0]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
 
-                <el-form-item label="客队" prop="secondTeam">
-                    <el-select clearable
-                               v-model="query.secondTeam"
-                            filterable
-                            reserve-keyword
-                            placeholder="输入客队名称"
+                        <el-form-item label="客队" prop="secondTeam">
+                            <el-select clearable
+                                       v-model="query.secondTeam"
+                                       filterable
+                                       reserve-keyword
+                                       placeholder="输入客队名称"
                             >
-                        <el-option
-                                v-for="item in query.secondTeams"
-                                :key="item[0]"
-                                :label="item[1]"
-                                :value="item[0]">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="时间">
-                    <el-date-picker
-                            v-model="query.bisaiTime"
-                            type="daterange"
-                            align="right"
-                            unlink-panels
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            format="yyyy-MM-dd"
-                            value-format="yyyy-MM-dd"
-                            :picker-options="pickerOptions2">
-                    </el-date-picker>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="onSubmit">查询</el-button>
-                    <el-button @click="resetForm">重置</el-button>
-                    <el-button type="primary" @click="syscPankou">同步博彩公司盘口</el-button>
-                </el-form-item>
-            </el-form>
-            <template>
-                <el-table
-                        :data="query.queryData"
-                        style="width: 100%">
-                    <el-table-column
-                            prop="date"
-                            label="比赛时间"
-                            width="140">
-                    </el-table-column>
-                    <el-table-column
-                            prop="firstT"
-                            label="主队"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="secondT"
-                            label="客队"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="full_score"
-                            label="全场比分"
-                            width="100">
-                    </el-table-column>
-                    <el-table-column
-                            prop="half_score"
-                            label="半场比分"
-                            width="100">
-                    </el-table-column>
+                                <el-option
+                                        v-for="item in query.secondTeams"
+                                        :key="item[0]"
+                                        :label="item[1]"
+                                        :value="item[0]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="时间">
+                            <el-date-picker
+                                    v-model="query.bisaiTime"
+                                    type="daterange"
+                                    align="right"
+                                    unlink-panels
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期"
+                                    format="yyyy-MM-dd"
+                                    value-format="yyyy-MM-dd"
+                                    :picker-options="pickerOptions2">
+                            </el-date-picker>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="onSubmit">查询</el-button>
+                            <el-button @click="resetForm">重置</el-button>
+                            <el-button type="primary" @click="syscPankou">同步博彩公司盘口</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <template>
+                        <el-table
+                                :data="query.queryData"
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="比赛时间"
+                                    width="140">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="firstT"
+                                    label="主队"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="secondT"
+                                    label="客队"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="full_score"
+                                    label="全场比分"
+                                    width="100">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="half_score"
+                                    label="半场比分"
+                                    width="100">
+                            </el-table-column>
 
-                    <el-table-column label="让球" align="center">
-                        <el-table-column
-                                prop="full_concede"
-                                label="全场">
-                        </el-table-column>
-                        <el-table-column
-                                prop="half_concede"
-                                label="半场">
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column label="大小" align="center"  >
-                        <el-table-column
-                                prop="full_bigsmall"
-                                label="全场">
-                        </el-table-column>
-                        <el-table-column
-                                prop="half_bigsmall"
-                                label="半场">
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column
-                            prop="bocaiGs"
-                            label="博彩公司">
-                    </el-table-column>
-                    <el-table-column
-                            prop="pankouName"
-                            label="盘口">
-                    </el-table-column>
-                    <el-table-column label="初盘" align="center">
-                        <el-table-column
-                                prop="first_zhudui"
-                                label="主队">
-                        </el-table-column>
-                        <el-table-column
-                                prop="first_pankou"
-                                label="盘口">
-                        </el-table-column>
-                        <el-table-column
-                                prop="first_cidui"
-                                label="客队">
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column label="终盘" align="center">
-                        <el-table-column
-                                prop="finally_zhudui"
-                                label="主队">
-                        </el-table-column>
-                        <el-table-column
-                                prop="finally_pankou"
-                                label="盘口">
-                        </el-table-column>
-                        <el-table-column
-                                prop="finally_cidui"
-                                label="客队">
-                        </el-table-column>
-                    </el-table-column>
-                    <el-table-column label="操作" align="center" prop="id">
-                        <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)" v-if="scope.row.id" type="text" size="small">查看</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-            </template>
-            <template>
-                <div align="right">
-                    <el-pagination
-                            @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
-                            :current-page="query.currentPage"
-                            :page-sizes="[2,10, 20, 50, 100]"
-                            :page-size="query.pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="query.total">
-                    </el-pagination>
-                </div>
-            </template>
-        </el-main>
-    </el-container>
+                            <el-table-column label="让球" align="center">
+                                <el-table-column
+                                        prop="full_concede"
+                                        label="全场">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="half_concede"
+                                        label="半场">
+                                </el-table-column>
+                            </el-table-column>
+                            <el-table-column label="大小" align="center"  >
+                                <el-table-column
+                                        prop="full_bigsmall"
+                                        label="全场">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="half_bigsmall"
+                                        label="半场">
+                                </el-table-column>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="bocaiGs"
+                                    label="博彩公司">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="pankouName"
+                                    label="盘口">
+                            </el-table-column>
+                            <el-table-column label="初盘" align="center">
+                                <el-table-column
+                                        prop="first_zhudui"
+                                        label="主队">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="first_pankou"
+                                        label="盘口">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="first_cidui"
+                                        label="客队">
+                                </el-table-column>
+                            </el-table-column>
+                            <el-table-column label="终盘" align="center">
+                                <el-table-column
+                                        prop="finally_zhudui"
+                                        label="主队">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="finally_pankou"
+                                        label="盘口">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="finally_cidui"
+                                        label="客队">
+                                </el-table-column>
+                            </el-table-column>
+                            <el-table-column label="操作" align="center" prop="id">
+                                <template slot-scope="scope">
+                                    <el-button @click="handleClick(scope.row)" v-if="scope.row.id" type="text" size="small">查看</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                    <template>
+                        <div align="right">
+                            <el-pagination
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="query.currentPage"
+                                    :page-sizes="[2,10, 20, 50, 100]"
+                                    :page-size="query.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="query.total">
+                            </el-pagination>
+                        </div>
+                    </template>
+                </el-main>
+            </el-container>
+        </el-tab-pane>
+        <el-tab-pane label="数据同步">
+            <el-container>
+                <el-header height="100">同步基础数据（国家/联赛/年度）</el-header>
+                <el-main>
+                    <el-form :inline="true" :rules="rules" :model="query" ref="syncBaseForm" class="demo-form-inline">
+                        <el-form-item>
+                            <el-button type="primary" @click="syscBaseData">同步数据</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-main>
+            </el-container>
+            <el-container>
+                <el-header height="100">同步比赛</el-header>
+                <el-main>
+                    <el-form :inline="true" :rules="rules" :model="query" ref="syncForm" class="demo-form-inline">
+                        <el-form-item label="国家">
+                            <el-select filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">
+                                <el-option
+                                        v-for="item in query.countryList"
+                                        :key="item[3]"
+                                        :label="item[1]"
+                                        :value="item[3]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="联赛">
+                            <el-select clearable filterable v-model="query.gamesId" placeholder="选择联赛">
+                                <el-option
+                                        v-for="item in query.games"
+                                        :key="item[0]"
+                                        :label="item[1]"
+                                        :value="item[1]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="赛季">
+                            <el-select clearable filterable v-model="query.year" placeholder="选择赛季">
+                                <el-option
+                                        v-for="item in query.years"
+                                        :key="item[0]"
+                                        :label="item[1]"
+                                        :value="item[1]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="syscBisaiData">同步数据</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-main>
+            </el-container>
+        </el-tab-pane>
+    </el-tabs>
+
 </div>
 </body>
 <!-- import Vue before Element -->
@@ -426,28 +451,20 @@
                     console.log('请求失败处理');
                 });
             },
-            // changeCountry: function () {
-            //     this.query.gamesId = undefined;
-            //     this.query.firstTeam = undefined;
-            //     this.query.secondTeam = undefined;
-            //     this.$http.get('/findGames/' + this.query.countryId).then(function (res) {
-            //         this.query.games = res.body
-            //     }, function () {
-            //         console.log('请求失败处理');
-            //     });
-            //     this.query.year = undefined;
-            //     this.$http.get('/findYears/' + this.query.countryId).then(function (res) {
-            //         this.query.years = res.body
-            //     }, function () {
-            //         console.log('请求失败处理');
-            //     });
-            //     this.$http.get('/findTeam',{params:{countryId:this.query.countryId}}).then(function (res) {
-            //         this.query.firstTeams = res.body
-            //         this.query.secondTeams= res.body
-            //     }, function () {
-            //         console.log('请求失败处理');
-            //     });
-            // },
+            changeCountry: function () {
+                this.query.gamesId = undefined;
+                this.$http.get('/findGames/' + this.query.countryId).then(function (res) {
+                    this.query.games = res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+                this.query.year = undefined;
+                this.$http.get('/findYears/' + this.query.countryId).then(function (res) {
+                    this.query.years = res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            },
             findFirstTeam:function (v) {
                 if(v && v.length<1) {
                     return
@@ -497,28 +514,43 @@
             },
             handleClick:function (row) {
                 window.open("http://vip.win0168.com/AsianOdds_n.aspx?id="+row.id)
+            },
+            syscBisaiData:function () {
+                if(!this.query.countryId){
+                    this.$alert('请选择国家', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                if(!this.query.gamesId){
+                    this.$alert('请选择联赛', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                if(!this.query.year){
+                    this.$alert('请选择年度', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                this.$http.get('/syscBisaiData',{params:{countryId:this.query.countryId,gamesId:this.query.gamesId,year:this.query.year}}).then(function (res) {
+                    this.$alert('同步成功', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                }, function () {
+                    console.log('请求失败处理');
+                });
+            },
+            syscBaseData:function () {
+                this.$http.get('/syscBaseData').then(function (res) {
+                    this.$alert('同步成功', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                }, function () {
+                    console.log('请求失败处理');
+                });
             }
-            // changeGames:function (v) {
-            //     this.query.year=undefined;
-            //     this.query.firstTeam=undefined;
-            //     this.query.secondTeam=undefined;
-            //     this.$http.get('/findTeam',{params:{countryId:this.query.countryId,gameId:this.query.gamesId}}).then(function (res) {
-            //         this.query.firstTeams = res.body
-            //         this.query.secondTeams= res.body
-            //     }, function () {
-            //         console.log('请求失败处理');
-            //     });
-            // },
-            // changeYear:function (v) {
-            //     this.query.firstTeam=undefined;
-            //     this.query.secondTeam=undefined;
-            //     this.$http.get('/findTeam',{params:{countryId:this.query.countryId,gameId:this.query.gamesId,yearsStr:this.query.year}}).then(function (res) {
-            //         this.query.firstTeams = res.body
-            //         this.query.secondTeams= res.body
-            //     }, function () {
-            //         console.log('请求失败处理');
-            //     });
-            // }
         }
     });
 </script>
