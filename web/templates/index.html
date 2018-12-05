@@ -388,6 +388,7 @@
                         return false;
                     }
                 });
+                this.query.currentPage=1;
                 this.$http.post('/query/'+this.query.currentPage+'/'+this.query.pageSize,
                     {
                         begin: this.query.bisaiTime?this.query.bisaiTime[0]:null,
