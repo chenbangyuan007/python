@@ -128,5 +128,4 @@ def query(page, pageSize):
 
 
 if __name__ == '__main__':
-    print(app.config.get('APPLICATION_ROOT'))
     app.run(debug=True, host='localhost', port=8089)
