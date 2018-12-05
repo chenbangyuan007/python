@@ -128,4 +128,4 @@ def query(page, pageSize):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='localhost', port=8089)
+    app.run(debug=True, host='192.168.3.89', port=8089)
