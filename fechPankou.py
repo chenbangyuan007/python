@@ -29,6 +29,10 @@ def fetchPankou(bisaiId):
         finally_zhudui=pq(hang[5]).html()
         finally_pankou=pq(hang[6]).html()
         finally_cidui=pq(hang[7]).html()
+        count= dao.selectOne("select count(id) from bocaiGs where bocaiGsName=%s",(bocaiGs,))
+        if count[0]<=0:
+            dao.insert("insert into bocaiGs(bocaiGsName)"
+                       " VALUES (%s) ",(bocaiGs,))
         data=(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId)
         dao.insert("insert into pankou(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId)"
                    " VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ",data)
