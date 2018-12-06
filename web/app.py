@@ -33,29 +33,37 @@ def findYear(countryId):
 
 @app.route('/findTeam')
 def findTeam():
-    teamName = request.args.get('teamName')
-    firstTeamId=request.args.get('firstTeamId')
-    teams = []
-    if teamName==None or teamName=='':
-        return jsonify(teams)
-
+    gameId = request.args.get('gameId')
+    countryId = request.args.get('countryId')
+    sql ="select t.id,t.`name` from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
     parameter=()
-    sql="select t.id,t.name from team t  where 1=1 and "
-    if teamName!=None:
-        sql =sql +" t.`name` like %s"
-        parameter=parameter+("%"+teamName+"%",)
-    if firstTeamId!=None:
-        sql =sql +" and t.id!=%s"
-        parameter=parameter+(firstTeamId,)
-    sql=sql+" group by t.id"
+    if countryId!=None:
+        sql=sql+" and g.id=%s"
+        parameter=parameter+(countryId,)
+    if gameId!=None:
+        sql=sql+" and p.name=%s"
+        parameter=parameter+(gameId,)
+    sql=sql+" and t.id is not null group by t.id"
     teams=dao.selectAll(sql,parameter)
     return jsonify(teams)
 
 @app.route('/findKeTeam')
 def findKeTeam():
     firstTeamId=request.args.get('firstTeamId')
-    parameter=(firstTeamId,)
-    sql="select t.id,t.name from team t left join game_data gd on gd.second_team_id=t.id where gd.first_team_id=%s group by t.id"
+    gameId = request.args.get('gameId')
+    countryId = request.args.get('countryId')
+    sql ="select t.id,t.`name` from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
+    parameter=()
+    if countryId!=None:
+        sql=sql+" and g.id=%s"
+        parameter=parameter+(countryId,)
+    if gameId!=None:
+        sql=sql+" and p.name=%s"
+        parameter=parameter+(gameId,)
+    if firstTeamId!=None:
+        sql=sql+" and t.id!=%s"
+        parameter=parameter+(firstTeamId,)
+    sql=sql+" and t.id is not null group by t.id"
     teams=dao.selectAll(sql,parameter)
     return jsonify(teams)
 
@@ -74,6 +82,11 @@ def syscPankou():
 def syscBaseData():
     games.fechCountry()
     return jsonify(("同步成功",))
+
+@app.route('/findBocaiGsNames')
+def findBocaiGsNames():
+    data=dao.selectAll("select id,bocaiGsName from bocaiGs",None)
+    return jsonify(data)
 
 @app.route('/syscBisaiData')
 def syscBisaiData():
@@ -107,6 +120,7 @@ def query(page, pageSize):
 
     firstTeam = request.form['firstTeam']
     secondTeam = request.form['secondTeam']
+    bocaiGs = request.form.getlist('bocaiGs[]')
     queryData = []
     parameter = (firstTeam, secondTeam)
     dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where id=d.first_team_id) as '主队'," \
@@ -117,7 +131,14 @@ def query(page, pageSize):
     if begin != None and begin != '':
         fromSql = fromSql + " AND d.bs_time BETWEEN %s AND %s "
         parameter = parameter + (begin, end)
-    fromSql = fromSql + " AND ( p.bocaiGs = '澳门' OR p.bocaiGs = '易胜博' ) ORDER BY d.bs_time DESC"
+    if bocaiGs!=None and len(bocaiGs)>0:
+        bocaiNames="";
+        for i in range(len(bocaiGs)):
+            bocaiNames=bocaiNames+"'"+bocaiGs[i]+"'"
+            if i<len(bocaiGs)-1:
+                bocaiNames=bocaiNames+","
+        fromSql = fromSql + " AND p.bocaiGs in ("+bocaiNames+") "
+    fromSql=fromSql+" ORDER BY d.bs_time DESC"
     countSql = "select count(d.bisai_id)" + fromSql
     total = dao.selectAll(countSql, parameter)
     dataSql = dataSql + fromSql + " limit %s,%s"
