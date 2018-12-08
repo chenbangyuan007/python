@@ -82,9 +82,24 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="盘口" prop="pankou">
+                        <el-form-item label="初盘" prop="pankou">
                             <el-select clearable  multiple
                                        v-model="query.pankou"
+                                       filterable
+                                       reserve-keyword
+                                       placeholder="请选择盘口"
+                            >
+                                <el-option
+                                        v-for="item in query.pankouList"
+                                        :key="item[0]"
+                                        :label="item[1]"
+                                        :value="item[1]">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="终盘" prop="finally_pankou">
+                            <el-select clearable  multiple
+                                       v-model="query.finally_pankou"
                                        filterable
                                        reserve-keyword
                                        placeholder="请选择盘口"
@@ -303,12 +318,7 @@
                     secondTeams:[],
                     queryData:[],
                     bocaiGsNames:[],
-                    pankouList:[
-                        [1,-0.5],
-                        [2,-0.5],
-                        [3,-0.5],
-                        [4,-0.5]
-                    ],
+                    pankouList:[],
                     countryId: null,
                     gamesId: null,
                     year: null,
@@ -316,6 +326,8 @@
                     firstTeam:null,
                     secondTeam:null,
                     currentPage:1,
+                    finally_pankou:null,
+                    pankou:null,
                     pageSize:10,
                     total:0,
                     bocaiGs:null
@@ -388,6 +400,11 @@
             }, function () {
                 console.log('请求失败处理');
             });
+            this.$http.get('/findPankouLabel').then(function (res) {
+                this.query.pankouList = res.body;
+            }, function () {
+                console.log('请求失败处理');
+            });
         }
         ,
         methods: {
@@ -451,6 +468,7 @@
                         secondTeam: this.query.secondTeam,
                         bocaiGs:this.query.bocaiGs,
                         pankou:this.query.pankou,
+                        finally_pankou:this.query.finally_pankou,
                         countryId:this.query.countryId,
                         gameId:this.query.gamesId
                     },
@@ -557,6 +575,8 @@
                 this.query.bisaiTime = undefined;
                 this.query.firstTeam = undefined;
                 this.query.secondTeam = undefined;
+                this.query.pankou= [];
+                this.query.finally_pankou = [];
                 this.query.bocaiGs = [];
                 this.query.firstTeams = [];
                 this.query.secondTeams = [];

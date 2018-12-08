@@ -88,6 +88,11 @@ def findBocaiGsNames():
     data=dao.selectAll("select id,bocaiGsName from bocaiGs",None)
     return jsonify(data)
 
+@app.route('/findPankouLabel')
+def findPankouLabel():
+    data=dao.selectAll("select id,pankou,alias from pankouLabel",None)
+    return jsonify(data)
+
 @app.route('/syscBisaiData')
 def syscBisaiData():
     countryId=request.args.get('countryId')
@@ -121,6 +126,8 @@ def query(page, pageSize):
     firstTeam = request.form['firstTeam']
     secondTeam = request.form['secondTeam']
     bocaiGs = request.form.getlist('bocaiGs[]')
+    pankous = request.form.getlist('pankou[]')
+    finally_pankou = request.form.getlist('finally_pankou[]')
 
     gameId = request.form['gameId']
     countryId = request.form['countryId']
@@ -152,6 +159,21 @@ def query(page, pageSize):
             if i<len(bocaiGs)-1:
                 bocaiNames=bocaiNames+","
         fromSql = fromSql + " AND p.bocaiGs in ("+bocaiNames+") "
+    if pankous!=None and len(pankous)>0:
+        pankou="";
+        for i in range(len(pankous)):
+            pankou=pankou+"'"+pankous[i]+"'"
+            if i<len(pankous)-1:
+                pankou=pankou+","
+        fromSql = fromSql + " AND p.first_pankou in ("+pankou+") "
+
+    if finally_pankou!=None and len(finally_pankou)>0:
+        fin_pankou="";
+        for i in range(len(finally_pankou)):
+            fin_pankou=fin_pankou+"'"+finally_pankou[i]+"'"
+            if i<len(finally_pankou)-1:
+                fin_pankou=fin_pankou+","
+        fromSql = fromSql + " AND p.finally_pankou in ("+fin_pankou+") "
     fromSql=fromSql+" ORDER BY d.bs_time DESC"
     countSql = "select count(d.bisai_id)" + fromSql
     total = dao.selectAll(countSql, parameter)
