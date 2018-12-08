@@ -92,8 +92,8 @@
                                 <el-option
                                         v-for="item in query.pankouList"
                                         :key="item[0]"
-                                        :label="item[0]"
-                                        :value="item[0]">
+                                        :label="item[1]"
+                                        :value="item[1]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -303,6 +303,12 @@
                     secondTeams:[],
                     queryData:[],
                     bocaiGsNames:[],
+                    pankouList:[
+                        [1,-0.5],
+                        [2,-0.5],
+                        [3,-0.5],
+                        [4,-0.5]
+                    ],
                     countryId: null,
                     gamesId: null,
                     year: null,
