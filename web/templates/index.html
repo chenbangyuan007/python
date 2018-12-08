@@ -24,7 +24,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="联赛">
-                            <el-select clearable filterable v-model="query.gamesId" placeholder="选择联赛" @change="findFirstTeam">
+                            <el-select clearable filterable v-model="query.gamesId" placeholder="选择联赛" @change="changeLisai">
                                 <el-option
                                         v-for="item in query.games"
                                         :key="item[0]"
@@ -303,12 +303,12 @@
                     secondTeams:[],
                     queryData:[],
                     bocaiGsNames:[],
-                    countryId: undefined,
-                    gamesId: undefined,
-                    year: undefined,
-                    bisaiTime: undefined,
-                    firstTeam:undefined,
-                    secondTeam:undefined,
+                    countryId: null,
+                    gamesId: null,
+                    year: null,
+                    bisaiTime: null,
+                    firstTeam:null,
+                    secondTeam:null,
                     currentPage:1,
                     pageSize:10,
                     total:0,
@@ -444,7 +444,10 @@
                         end:this.query.bisaiTime?this.query.bisaiTime[1]:null,
                         firstTeam: this.query.firstTeam,
                         secondTeam: this.query.secondTeam,
-                        bocaiGs:this.query.bocaiGs
+                        bocaiGs:this.query.bocaiGs,
+                        pankou:this.query.pankou,
+                        countryId:this.query.countryId,
+                        gameId:this.query.gamesId
                     },
                     {
                         emulateJSON: true
@@ -502,6 +505,10 @@
                     console.log('请求失败处理');
                 });
             },
+            changeLisai:function () {
+                this.findFirstTeam();
+                this.findKeTeam()
+            },
             changeCountry: function () {
                 this.query.gamesId = undefined;
                 this.query.firstTeam = undefined;
@@ -517,8 +524,6 @@
                 }, function () {
                     console.log('请求失败处理');
                 });
-                this.findFirstTeam();
-                this.findKeTeam()
             },
             findFirstTeam:function (v) {
                 this.query.firstTeam = undefined;
@@ -547,6 +552,10 @@
                 this.query.bisaiTime = undefined;
                 this.query.firstTeam = undefined;
                 this.query.secondTeam = undefined;
+                this.query.bocaiGs = [];
+                this.query.firstTeams = [];
+                this.query.secondTeams = [];
+                this.query.games = [];
             },
             handleSizeChange:function(val) {
                this.query.pageSize=val;
@@ -558,6 +567,15 @@
                 this.onSubmit()
             },
             syscPankou:function () {
+                if(!this.query.firstTeam || !this.query.secondTeam){
+                    this.$alert('请选择需要同步的球队', '提示', {
+                        confirmButtonText: '确定',
+                        callback: function () {
+                        }
+                    });
+                    return;
+                }
+
                 this.$http.get('/syscPankou',{params:{firstTeamId:this.query.firstTeam,secondTeamsId:this.query.secondTeam}}).then(function (res) {
                     this.$alert('同步成功', '提示', {
                         confirmButtonText: '确定',

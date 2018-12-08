@@ -121,13 +121,27 @@ def query(page, pageSize):
     firstTeam = request.form['firstTeam']
     secondTeam = request.form['secondTeam']
     bocaiGs = request.form.getlist('bocaiGs[]')
-    queryData = []
-    parameter = (firstTeam, secondTeam)
+
+    gameId = request.form['gameId']
+    countryId = request.form['countryId']
+
     dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where id=d.first_team_id) as '主队'," \
               " (select name from team where id=d.second_team_id) as '客队', d.full_score, d.full_concede, d.full_bigsmall, d.half_score," \
               " d.half_concede, d.half_bigsmall, p.bocaiGs, p.first_zhudui, p.first_pankou, p.first_cidui, p.finally_zhudui, p.finally_pankou, p.finally_cidui,p.pankouName"
-    fromSql = " FROM game_data d LEFT JOIN pankou p ON d.bisai_id = p.bisaiId WHERE " \
-              "d.first_team_id = %s AND d.second_team_id = %s ";
+    fromSql = " FROM game_data d LEFT JOIN pankou p ON d.bisai_id = p.bisaiId WHERE 1=1"
+    parameter=()
+    if countryId!=None and countryId!='undefined':
+        fromSql=fromSql+" and d.country_id = %s"
+        parameter = parameter + (countryId, )
+    if gameId!=None and gameId!='undefined':
+        fromSql=fromSql+" and d.liansai = %s"
+        parameter = parameter + (gameId, )
+    if firstTeam!=None and firstTeam!='undefined':
+       fromSql=fromSql+" and d.first_team_id = %s"
+       parameter = parameter + (firstTeam, )
+    if secondTeam!=None and secondTeam!='undefined':
+        fromSql=fromSql+" and d.second_team_id = %s"
+        parameter = parameter + (secondTeam, )
     if begin != None and begin != '':
         fromSql = fromSql + " AND d.bs_time BETWEEN %s AND %s "
         parameter = parameter + (begin, end)

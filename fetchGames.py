@@ -116,7 +116,7 @@ def fetchGames(id,domain,years):
 
 
 if __name__=="__main__":
-    fetchGames(1230,"CupMatch","2011")
+    fetchGames(1662,"SubLeague","2018-2019")
 
 
 
