@@ -17,9 +17,9 @@
                             <el-select filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">
                                 <el-option
                                         v-for="item in query.countryList"
-                                        :key="item[3]"
+                                        :key="item[0]"
                                         :label="item[1]"
-                                        :value="item[3]">
+                                        :value="item[0]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -636,12 +636,6 @@
                 }
                 if(!this.query.gamesId){
                     this.$alert('请选择联赛', '提示', {
-                        confirmButtonText: '确定'
-                    });
-                    return;
-                }
-                if(!this.query.year){
-                    this.$alert('请选择年度', '提示', {
                         confirmButtonText: '确定'
                     });
                     return;

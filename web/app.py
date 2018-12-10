@@ -14,7 +14,7 @@ def index():
 
 @app.route('/findCountry')
 def hello():
-    country = dao.selectAll("select * from games", None)
+    country = dao.selectAll("select id,country from games", None)
     return jsonify(country)
 
 
@@ -98,7 +98,11 @@ def syscBisaiData():
     countryId=request.args.get('countryId')
     gamesId=request.args.get('gamesId')
     year=request.args.get('year')
-    pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s and years=%s order by bsid asc",(countryId,gamesId,year))
+    pirod=None
+    if year!=None or year!='undefined':
+        pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s and years=%s order by bsid asc",(countryId,gamesId,year))
+    else:
+        pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s  order by bsid asc",(countryId,gamesId))
     for j in range(len(pirod)):
         year=pirod[j][0]
         game_id=pirod[j][1]
