@@ -4,7 +4,7 @@ import  fechPankou
 import time
 game_id=None
 def runFetchALL(bsid):
-    allgames=dao.selectAll("select id from games",None)
+    allgames=dao.selectAll("select id from games where fetchTimes is null",None)
     for i in range(len(allgames)):
         pirod=None
         if bsid >0:
@@ -21,11 +21,12 @@ def runFetchALL(bsid):
                 domine='League'
             elif lv==1 and lv1==1:
                 domine='SubLeague'
-            elif lv==2 and lv1==0:
+            elif lv==2 and (lv1==0 or lv1==1):
                 domine='CupMatch'
             print(game_id,domine,year)
             fetchGames.fetchGames(game_id,domine,year)
             time.sleep(1)
+        dao.insert("update games set fetchTimes=1 where id=%s",(allgames[i][0],))
 
 
 def runFetchNotFetched():
