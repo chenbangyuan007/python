@@ -90,7 +90,7 @@ def findBocaiGsNames():
 
 @app.route('/findPankouLabel')
 def findPankouLabel():
-    data=dao.selectAll("select id,pankou,alias from pankouLabel",None)
+    data=dao.selectAll("select id,pankou,alias from pankouLabel order by alias asc ",None)
     return jsonify(data)
 
 @app.route('/syscBisaiData')

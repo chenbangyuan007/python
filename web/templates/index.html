@@ -92,8 +92,8 @@
                                 <el-option
                                         v-for="item in query.pankouList"
                                         :key="item[0]"
-                                        :label="item[1]"
-                                        :value="item[1]">
+                                        :label="item[2]"
+                                        :value="item[2]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -107,8 +107,8 @@
                                 <el-option
                                         v-for="item in query.pankouList"
                                         :key="item[0]"
-                                        :label="item[1]"
-                                        :value="item[1]">
+                                        :label="item[2]"
+                                        :value="item[2]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -451,6 +451,12 @@
                     drect=drect+"1.25"
                 }    if(data && data=='一球') {
                     drect=drect+"1"
+                }
+                if(data && data=='球半') {
+                    drect=drect+"1.5"
+                }
+                if(data && data=='球半/两') {
+                    drect=drect+"1.5"
                 }
                 return drect+"("+data+")";
             },
