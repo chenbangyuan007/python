@@ -91,11 +91,11 @@ def fechRecentPankou(year):
 
 if __name__=="__main__":
     # fechRecentBisai("2018")
-    runFetchPankou()
+    # runFetchPankou()
     # runFetchNotFetched()
     # games.fechCountry()
     # try:
-    #     runFetchALL(0)
+        runFetchALL(0)
     # except:
     #     if game_id!=None:
     #         runFetchALL(game_id)
