@@ -169,7 +169,7 @@ def query(page, pageSize):
             pankou=pankou+"'"+pankous[i]+"'"
             if i<len(pankous)-1:
                 pankou=pankou+","
-        fromSql = fromSql + " AND p.first_pankou in ("+pankou+") "
+        fromSql = fromSql + " AND p.first_pankou_alias in ("+pankou+") "
 
     if finally_pankou!=None and len(finally_pankou)>0:
         fin_pankou="";
@@ -177,7 +177,7 @@ def query(page, pageSize):
             fin_pankou=fin_pankou+"'"+finally_pankou[i]+"'"
             if i<len(finally_pankou)-1:
                 fin_pankou=fin_pankou+","
-        fromSql = fromSql + " AND p.finally_pankou in ("+fin_pankou+") "
+        fromSql = fromSql + " AND p.finally_pankou_alias in ("+fin_pankou+") "
     fromSql=fromSql+" ORDER BY d.bs_time DESC"
     countSql = "select count(d.bisai_id)" + fromSql
     total = dao.selectAll(countSql, parameter)
