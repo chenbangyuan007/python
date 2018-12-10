@@ -44,6 +44,7 @@ def fetchGames(id,domain,years):
     for l in range(len(teams)):
         count=dao.selectOne("select count(id) from team where id=%s",(teams[l][0],))
         if count[0]>0:
+            dao.insert("update team set game_id=%s where id=%",(id,teams[l][0]))
             continue
         else:
             teamData=None
@@ -116,7 +117,7 @@ def fetchGames(id,domain,years):
 
 
 if __name__=="__main__":
-    fetchGames(1662,"SubLeague","2018-2019")
+    fetchGames(124,"SubLeague","2018-2019")
 
 
 

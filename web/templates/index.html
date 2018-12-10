@@ -197,7 +197,7 @@
                                         label="主队">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="first_pankou"
+                                        prop="first_pankou_alias"
                                         label="盘口">
                                 </el-table-column>
                                 <el-table-column
@@ -211,7 +211,7 @@
                                         label="主队">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="finally_pankou"
+                                        prop="finally_pankou_alias"
                                         label="盘口">
                                 </el-table-column>
                                 <el-table-column
@@ -493,6 +493,8 @@
                         var finally_cidui=this.resovle(item[16])
                         var first_pankou=this.resovlePankou(item[12])
                         var finally_pankou=this.resovlePankou(item[15])
+                        var first_pankou_alias=item[18]
+                        var finally_pankou_alias=item[19]
                         if(id && id==item[0]){
                             datas.push({
                                 bocaiGs: item[10],
@@ -503,6 +505,8 @@
                                 finally_pankou: finally_pankou,
                                 finally_cidui: finally_cidui,
                                 pankouName: item[17],
+                                first_pankou_alias:first_pankou_alias,
+                                finally_pankou_alias: finally_pankou_alias
                             });
                             continue;
                         }
@@ -526,6 +530,8 @@
                             finally_pankou: finally_pankou,
                             finally_cidui: finally_cidui,
                             pankouName: item[17],
+                            first_pankou_alias:first_pankou_alias,
+                            finally_pankou_alias: finally_pankou_alias
                         });
                     }
                     this.query.queryData = datas
