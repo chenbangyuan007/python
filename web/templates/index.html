@@ -261,9 +261,9 @@
                             <el-select filterable v-model="query.countryId" placeholder="选择国家" @change="changeCountry">
                                 <el-option
                                         v-for="item in query.countryList"
-                                        :key="item[3]"
+                                        :key="item[0]"
                                         :label="item[1]"
-                                        :value="item[3]">
+                                        :value="item[0]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
