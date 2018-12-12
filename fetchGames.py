@@ -112,7 +112,7 @@ def fetchGames(id,domain,years):
                     updateData=(data[6],data[7],data[8]
                                 ,data[9],data[10],data[11],data[12],data[13],years,liansai,country_id,data[0],id)
                     dao.insert("UPDATE game_data set full_score=%s,half_score=%s,first_sort=%s,second_sort=%s,full_concede=%s "
-                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s,,liansai=%s,country_id=%s where bisai_id=%s and game_id=%s",updateData)
+                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s,liansai=%s,country_id=%s where bisai_id=%s and game_id=%s",updateData)
                 else:
                     dao.insert("INSERT INTO game_data (bisai_id,game_id,mark,bs_time,first_team_id,second_team_id,full_score, "
                            "half_score,first_sort,second_sort,full_concede,half_concede,full_bigsmall,half_bigsmall,turn,years,liansai,country_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",gameData)
