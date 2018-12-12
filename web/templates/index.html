@@ -690,8 +690,8 @@
                         if(action==='confirm'){
                             me.$http.get('/syscYaPankouData',{params:{countryId:me.query.countryId,
                                     gamesId:me.query.gamesId,year:me.query.year,
-                                    begin: this.query.syncTime?this.query.syncTime[0]:null,
-                                    end:this.query.syncTime?this.query.syncTime[1]:null}}).then(function (res) {
+                                    begin: me.query.syncTime?me.query.syncTime[0]:null,
+                                    end:me.query.syncTime?me.query.syncTime[1]:null}}).then(function (res) {
                                 this.fullscreenLoading = false;
                                 me.$alert('系统正在同步数据请稍后查看', '提示', {
                                     confirmButtonText: '确定'
