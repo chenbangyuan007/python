@@ -61,7 +61,7 @@ def findKeTeam():
         sql=sql+" and p.name=%s"
         parameter=parameter+(gameId,)
     if firstTeamId!=None:
-        sql=sql+" and t.id!=%s"
+        sql=sql+" and t.team_id!=%s"
         parameter=parameter+(firstTeamId,)
     sql=sql+" and t.id is not null group by t.id"
     teams=dao.selectAll(sql,parameter)

@@ -134,7 +134,7 @@
                         </el-form-item>
                     </el-form>
                     <template>
-                        <el-table
+                        <el-table v-loading="loading"
                                 :data="query.queryData"
                                 style="width: 100%">
                             <el-table-column
@@ -461,6 +461,7 @@
                 return drect+"("+data+")";
             },
             onSubmit: function () {;
+                this.loading=true
                 this.query.currentPage=1;
                 this.$refs["queryForm"].validate(function (valid) {
                     if (!valid) {
@@ -537,7 +538,9 @@
                     }
                     this.query.queryData = datas
                     this.query.total=res.body.total
+                    this.loading=false
                 }, function () {
+                    this.loading=false
                     console.log('请求失败处理');
                 });
             },
