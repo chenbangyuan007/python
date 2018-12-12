@@ -560,7 +560,9 @@
             changeCountry: function () {
                 this.query.gamesId = undefined;
                 this.query.firstTeam = undefined;
+                this.query.firstTeams=[];
                 this.query.secondTeam = undefined;
+                this.query.secondTeams=[];
                 this.$http.get('/findGames/' + this.query.countryId).then(function (res) {
                     this.query.games = res.body
                 }, function () {
