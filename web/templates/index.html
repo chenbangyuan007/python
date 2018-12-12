@@ -619,7 +619,7 @@
                     });
                     return;
                 }
-
+                this.loading=true
                 this.$http.get('/syscPankou',{params:{firstTeamId:this.query.firstTeam,secondTeamsId:this.query.secondTeam}}).then(function (res) {
                     this.$alert('同步成功', '提示', {
                         confirmButtonText: '确定',
@@ -629,6 +629,7 @@
                     this.onSubmit()
                 }, function () {
                     console.log('请求失败处理');
+                    this.loading=false
                 });
             },
             handleClick:function (row) {
