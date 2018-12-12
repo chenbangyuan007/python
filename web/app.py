@@ -141,16 +141,16 @@ def query(page, pageSize):
               " d.half_concede, d.half_bigsmall, p.bocaiGs, p.first_zhudui, p.first_pankou, p.first_cidui, p.finally_zhudui, p.finally_pankou, p.finally_cidui,p.pankouName,first_pankou_alias,finally_pankou_alias"
     fromSql = " FROM game_data d LEFT JOIN pankou p ON d.bisai_id = p.bisaiId WHERE 1=1"
     parameter=()
-    if countryId!=None and countryId!='undefined':
+    if countryId!=None and countryId!='undefined' and countryId!='':
         fromSql=fromSql+" and d.country_id = %s"
         parameter = parameter + (countryId, )
-    if gameId!=None and gameId!='undefined':
+    if gameId!=None and gameId!='undefined' and gameId!='':
         fromSql=fromSql+" and d.liansai = %s"
         parameter = parameter + (gameId, )
-    if firstTeam!=None and firstTeam!='undefined':
+    if firstTeam!=None and firstTeam!='undefined' and  firstTeam!='':
        fromSql=fromSql+" and d.first_team_id = %s"
        parameter = parameter + (firstTeam, )
-    if secondTeam!=None and secondTeam!='undefined':
+    if secondTeam!=None and secondTeam!='undefined' and  secondTeam!='':
         fromSql=fromSql+" and d.second_team_id = %s"
         parameter = parameter + (secondTeam, )
     if begin != None and begin != '':
