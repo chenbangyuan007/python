@@ -33,9 +33,11 @@ def fetchPankou(bisaiId):
         if count[0]<=0:
             dao.insert("insert into bocaiGs(bocaiGsName)"
                        " VALUES (%s) ",(bocaiGs,))
-        data=(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId)
-        dao.insert("insert into pankou(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId)"
-                   " VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s) ",data)
+        first_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(first_pankou,))
+        finally_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(finally_pankou,))
+        data=(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId,first_pankou_alias,finally_pankou_alias)
+        dao.insert("insert into pankou(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId,first_pankou_alias,finally_pankou_alias)"
+                   " VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ",data)
     print(str(bisaiId)+"结束")
 
 if __name__=="__main__":
