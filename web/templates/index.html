@@ -288,7 +288,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="syscBisaiData">同步数据</el-button>
+                            <el-button type="primary" @click="syscBisaiData">同步比赛数据</el-button>
+                            <el-button type="primary" @click="syscYapankouData">同步亚赔数据</el-button>
                         </el-form-item>
                     </el-form>
                 </el-main>
@@ -633,6 +634,46 @@
                 }, function () {
                     console.log('请求失败处理');
                     this.loading=false
+                });
+            },
+            syscYapankouData:function () {
+                if(!this.query.countryId){
+                    this.$alert('请选择国家', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                if(!this.query.gamesId){
+                    this.$alert('请选择联赛', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                if(!this.query.year){
+                    this.$alert('请选择赛季', '提示', {
+                        confirmButtonText: '确定'
+                    });
+                    return;
+                }
+                this.fullscreenLoading = true;
+                var me = this;
+                this.$confirm('同步赔率数据可能花费时间较长，系统将在后台同步，请稍后查看', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    callback:function (action) {
+                        if(action==='confirm'){
+                            me.$http.get('/syscYaPankouData',{params:{countryId:me.query.countryId,gamesId:me.query.gamesId,year:me.query.year}}).then(function (res) {
+                                this.fullscreenLoading = false;
+                                me.$alert('系统正在同步数据请稍后查看', '提示', {
+                                    confirmButtonText: '确定'
+                                });
+                            }, function () {
+                                this.fullscreenLoading = false;
+                                console.log('请求失败处理');
+                            });
+                        }
+                    }
                 });
             },
             handleClick:function (row) {

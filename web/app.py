@@ -4,6 +4,7 @@ import dao;
 import fechPankou
 import games
 import fetchGames
+import threading
 app = Flask(__name__)
 
 
@@ -77,6 +78,21 @@ def syscPankou():
     for i in range(len(teams)):
         fechPankou.fetchPankou(teams[i][0])
     return jsonify(("同步成功",))
+
+@app.route('/syscYaPankouData')
+def syscYaPankouData():
+    countryId=request.args.get('countryId')
+    gamesId=request.args.get('gamesId')
+    year=request.args.get('year')
+    sql="select d.bisai_id from game_pirod g left join game_data d on g.bsid=d.game_id where d.liansai=%s and d.country_id=%s and g.years=%s"
+    pirod=dao.selectAll(sql,(gamesId,countryId,year))
+    new_thread = threading.Thread(target=fethchPankou,args=(pirod,))
+    new_thread.start()
+    return jsonify(("同步成功",))
+
+def fethchPankou(bisaiArray):
+    for i in range(len(bisaiArray)):
+        fechPankou.fetchPankou(bisaiArray[i][0])
 
 @app.route('/syscBaseData')
 def syscBaseData():
