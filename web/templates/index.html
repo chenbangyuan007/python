@@ -248,7 +248,7 @@
                 <el-main>
                     <el-form :inline="true"  :model="query" ref="syncBaseForm" class="demo-form-inline">
                         <el-form-item>
-                            <el-button type="primary" @click="syscBaseData">同步数据</el-button>
+                            <el-button type="primary" @click="syscBaseData" v-loading.fullscreen.lock="fullscreenLoading">同步数据</el-button>
                         </el-form-item>
                     </el-form>
                 </el-main>
@@ -310,6 +310,7 @@
             return {
                 visible: false,
                 loading: false,
+                fullscreenLoading:false,
                 query: {
                     countryList: [],
                     games: [],
@@ -650,20 +651,26 @@
                     });
                     return;
                 }
+                this.fullscreenLoading=true
                 this.$http.get('/syscBisaiData',{params:{countryId:this.query.countryId,gamesId:this.query.gamesId,year:this.query.year}}).then(function (res) {
                     this.$alert('同步成功', '提示', {
                         confirmButtonText: '确定'
                     });
+                    this.fullscreenLoading=false
                 }, function () {
+                    this.fullscreenLoading=false
                     console.log('请求失败处理');
                 });
             },
             syscBaseData:function () {
+                this.fullscreenLoading=true
                 this.$http.get('/syscBaseData').then(function (res) {
                     this.$alert('同步成功', '提示', {
                         confirmButtonText: '确定'
                     });
+                    this.fullscreenLoading=false
                 }, function () {
+                    this.fullscreenLoading=false
                     console.log('请求失败处理');
                 });
             }
