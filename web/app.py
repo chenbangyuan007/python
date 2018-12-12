@@ -24,9 +24,9 @@ def findGames(countryId):
     return jsonify(games)
 
 
-@app.route('/findYears/<countryId>')
-def findYear(countryId):
-    games = dao.selectAll("select id,years from game_pirod where game_id=%s", (countryId,))
+@app.route('/findYears/<countryId>/<gameId>')
+def findYear(countryId,gameId):
+    games = dao.selectAll("select id,years from game_pirod where game_id=%s and name=%s", (countryId,gameId))
 
     return jsonify(games)
 

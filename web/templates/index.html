@@ -268,7 +268,7 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="联赛">
-                            <el-select clearable filterable v-model="query.gamesId" placeholder="选择联赛">
+                            <el-select clearable filterable v-model="query.gamesId" placeholder="选择联赛" @change="changeLisai">
                                 <el-option
                                         v-for="item in query.games"
                                         :key="item[0]"
@@ -541,7 +541,13 @@
                     console.log('请求失败处理');
                 });
             },
-            changeLisai:function () {
+            changeLisai:function (v) {
+                this.query.year = undefined;
+                this.$http.get('/findYears/' + this.query.countryId+"/"+this.query.gamesId).then(function (res) {
+                    this.query.years = res.body
+                }, function () {
+                    console.log('请求失败处理');
+                });
                 this.findFirstTeam();
                 this.findKeTeam()
             },
@@ -551,12 +557,6 @@
                 this.query.secondTeam = undefined;
                 this.$http.get('/findGames/' + this.query.countryId).then(function (res) {
                     this.query.games = res.body
-                }, function () {
-                    console.log('请求失败处理');
-                });
-                this.query.year = undefined;
-                this.$http.get('/findYears/' + this.query.countryId).then(function (res) {
-                    this.query.years = res.body
                 }, function () {
                     console.log('请求失败处理');
                 });
