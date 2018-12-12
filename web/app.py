@@ -136,8 +136,8 @@ def query(page, pageSize):
     gameId = request.form['gameId']
     countryId = request.form['countryId']
 
-    dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where team_id=d.first_team_id) as '主队'," \
-              " (select name from team where team_id=d.second_team_id) as '客队', d.full_score, d.full_concede, d.full_bigsmall, d.half_score," \
+    dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where team_id=d.first_team_id and game_id=d.game_id) as '主队'," \
+              " (select name from team where team_id=d.second_team_id and game_id=d.game_id) as '客队', d.full_score, d.full_concede, d.full_bigsmall, d.half_score," \
               " d.half_concede, d.half_bigsmall, p.bocaiGs, p.first_zhudui, p.first_pankou, p.first_cidui, p.finally_zhudui, p.finally_pankou, p.finally_cidui,p.pankouName,first_pankou_alias,finally_pankou_alias"
     fromSql = " FROM game_data d LEFT JOIN pankou p ON d.bisai_id = p.bisaiId WHERE 1=1"
     parameter=()
