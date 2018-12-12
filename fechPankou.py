@@ -33,8 +33,12 @@ def fetchPankou(bisaiId):
         if count[0]<=0:
             dao.insert("insert into bocaiGs(bocaiGsName)"
                        " VALUES (%s) ",(bocaiGs,))
-        first_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(first_pankou,))
-        finally_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(finally_pankou,))
+        if first_pankou!=None:
+            first_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(first_pankou,))
+            first_pankou_alias=first_pankou_alias[0]
+        if finally_pankou!=None:
+            finally_pankou_alias= dao.selectOne("select alias from pankouLabel where pankou=%s limit 1",(finally_pankou,))
+            finally_pankou_alias=finally_pankou_alias[0]
         data=(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId,first_pankou_alias,finally_pankou_alias)
         dao.insert("insert into pankou(bocaiGs,pankouName,first_zhudui,first_pankou,first_cidui,finally_zhudui,finally_pankou,finally_cidui,bisaiId,first_pankou_alias,finally_pankou_alias)"
                    " VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ",data)
