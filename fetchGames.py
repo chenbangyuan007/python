@@ -63,6 +63,9 @@ def fetchGames(id,domain,years):
         gameDataStr=re.findall(r"jh\[\"G.+\"\] =(.+?)\];\s",data)
     else:
         gameDataStr=re.findall(r"jh\[\"R_.+\"\] =(.+?)\];\s",data)
+    lianSai = dao.selectOne("select name,game_id from game_pirod where bsid=%s limit 1", (id,))
+    liansai=lianSai[0]
+    country_id=lianSai[1]
     print(gameDataStr)
     for j in range(len(gameDataStr)):
         gameDataStr[j]=gameDataStr[j]+']'
@@ -74,17 +77,17 @@ def fetchGames(id,domain,years):
                     date=data[3].split('<br/>')
                     data[3]=years+'-'+date[0]+' '+date[1]
                 gameData=(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8]
-                          ,data[9],data[10],data[11],data[12],data[13],j+1,years)
+                          ,data[9],data[10],data[11],data[12],data[13],j+1,years,liansai,country_id)
                 print(gameData)
                 count=dao.selectOne("select count(id) from game_data where bisai_id=%s and game_id=%s",(data[0],id))
                 if count[0]>0:
                     updateData=(data[6],data[7],data[8]
-                                ,data[9],data[10],data[11],data[12],data[13],years,data[0],id)
+                                ,data[9],data[10],data[11],data[12],data[13],years,liansai,country_id,data[0],id)
                     dao.insert("UPDATE game_data set full_score=%s,half_score=%s,first_sort=%s,second_sort=%s,full_concede=%s "
-                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s where bisai_id=%s and game_id=%s",updateData)
+                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s,liansai=%s,country_id=%s where bisai_id=%s and game_id=%s",updateData)
                 else:
                     dao.insert("INSERT INTO game_data (bisai_id,game_id,mark,bs_time,first_team_id,second_team_id,full_score, "
-                               "half_score,first_sort,second_sort,full_concede,half_concede,full_bigsmall,half_bigsmall,turn,years) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",gameData)
+                               "half_score,first_sort,second_sort,full_concede,half_concede,full_bigsmall,half_bigsmall,turn,years,liansai,country_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%,%)",gameData)
         except Exception:
             dataStr=''
             if gameDataStr[j].endswith("]]]"):
@@ -102,21 +105,21 @@ def fetchGames(id,domain,years):
                     date=data[3].split('<br/>')
                     data[3]=years.split('-')[0]+'-'+date[0]+' '+date[1]
                 gameData=(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[8]
-                                    ,data[9],data[10],data[11],data[12],data[13],j+1,years)
+                                    ,data[9],data[10],data[11],data[12],data[13],j+1,years,liansai,country_id)
                 print(gameData)
                 count=dao.selectOne("select count(id) from game_data where bisai_id=%s and game_id=%s",(data[0],id))
                 if count[0]>0:
                     updateData=(data[6],data[7],data[8]
-                                ,data[9],data[10],data[11],data[12],data[13],years,data[0],id)
+                                ,data[9],data[10],data[11],data[12],data[13],years,liansai,country_id,data[0],id)
                     dao.insert("UPDATE game_data set full_score=%s,half_score=%s,first_sort=%s,second_sort=%s,full_concede=%s "
-                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s where bisai_id=%s and game_id=%s",updateData)
+                               ",half_concede=%s,full_bigsmall=%s,half_bigsmall=%s,years=%s,,liansai=%s,country_id=%s where bisai_id=%s and game_id=%s",updateData)
                 else:
                     dao.insert("INSERT INTO game_data (bisai_id,game_id,mark,bs_time,first_team_id,second_team_id,full_score, "
-                           "half_score,first_sort,second_sort,full_concede,half_concede,full_bigsmall,half_bigsmall,turn,years) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",gameData)
+                           "half_score,first_sort,second_sort,full_concede,half_concede,full_bigsmall,half_bigsmall,turn,years,liansai,country_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",gameData)
 
 
 if __name__=="__main__":
-    fetchGames(75,"CupMatch","2006")
+    fetchGames(75,"CupMatch","2018")
 
 
 
