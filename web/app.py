@@ -84,8 +84,14 @@ def syscYaPankouData():
     countryId=request.args.get('countryId')
     gamesId=request.args.get('gamesId')
     year=request.args.get('year')
+    begin = request.args.get("begin")
+    end =request.args.get("end")
+    parameter=(gamesId,countryId,year)
     sql="select d.bisai_id from game_pirod g left join game_data d on g.bsid=d.game_id where d.liansai=%s and d.country_id=%s and g.years=%s"
-    pirod=dao.selectAll(sql,(gamesId,countryId,year))
+    if begin != None and begin != '':
+        sql = sql + " AND d.bs_time BETWEEN %s AND %s "
+        parameter = parameter + (begin, end)
+    pirod=dao.selectAll(sql,parameter)
     new_thread = threading.Thread(target=fethchPankou,args=(pirod,))
     new_thread.start()
     return jsonify(("同步成功",))
