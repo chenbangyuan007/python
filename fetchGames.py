@@ -42,21 +42,20 @@ def fetchGames(id,domain,years):
     print(teamStr[0])
     teams=eval(teamStr[0])
     for l in range(len(teams)):
-        count=dao.selectOne("select count(id) from team where id=%s",(teams[l][0],))
+        count=dao.selectOne("select count(id) from team where team_id=%s and game_id=%s",(teams[l][0],id))
         if count[0]>0:
-            dao.insert("update team set game_id=%s where id=%s",(id,teams[l][0]))
             continue
         else:
             teamData=None
             if len(teams[l])==5:
                 teamData=(teams[l][0],teams[l][1],teams[l][2],id)
-                dao.insert("INSERT INTO team (id,name,alias,game_id) VALUES (%s,%s,%s,%s)",teamData)
+                dao.insert("INSERT INTO team (team_id,name,alias,game_id) VALUES (%s,%s,%s,%s)",teamData)
             elif len(teams[l])==6:
                 teamData=(teams[l][0],teams[l][1],teams[l][2],teams[l][5],id)
-                dao.insert("INSERT INTO team (id,name,alias,image,game_id) VALUES (%s,%s,%s,%s,%s)",teamData)
+                dao.insert("INSERT INTO team (team_id,name,alias,image,game_id) VALUES (%s,%s,%s,%s,%s)",teamData)
             elif len(teams[l])>6:
                 teamData=(teams[l][0],teams[l][1],teams[l][2],teams[l][5],teams[l][6],id)
-                dao.insert("INSERT INTO team (id,name,alias,image,mark,game_id) VALUES (%s,%s,%s,%s,%s,%s)",teamData)
+                dao.insert("INSERT INTO team (team_id,name,alias,image,mark,game_id) VALUES (%s,%s,%s,%s,%s,%s)",teamData)
 
     #比赛数据
     gameDataStr=None
@@ -117,7 +116,7 @@ def fetchGames(id,domain,years):
 
 
 if __name__=="__main__":
-    fetchGames(124,"SubLeague","2018-2019")
+    fetchGames(75,"CupMatch","2006")
 
 
 

@@ -46,7 +46,7 @@
                                         v-for="item in query.firstTeams"
                                         :key="item[0]"
                                         :label="item[1]"
-                                        :value="item[0]">
+                                        :value="item[2]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -62,7 +62,7 @@
                                         v-for="item in query.secondTeams"
                                         :key="item[0]"
                                         :label="item[1]"
-                                        :value="item[0]">
+                                        :value="item[2]">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -461,6 +461,7 @@
                 return drect+"("+data+")";
             },
             onSubmit: function () {;
+                this.query.currentPage=1;
                 this.$refs["queryForm"].validate(function (valid) {
                     if (!valid) {
                         return false;

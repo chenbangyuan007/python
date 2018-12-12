@@ -35,7 +35,7 @@ def findYear(countryId):
 def findTeam():
     gameId = request.args.get('gameId')
     countryId = request.args.get('countryId')
-    sql ="select t.id,t.`name` from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
+    sql ="select t.id,t.`name`,t.team_id from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
     parameter=()
     if countryId!=None:
         sql=sql+" and g.id=%s"
@@ -52,7 +52,7 @@ def findKeTeam():
     firstTeamId=request.args.get('firstTeamId')
     gameId = request.args.get('gameId')
     countryId = request.args.get('countryId')
-    sql ="select t.id,t.`name` from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
+    sql ="select t.id,t.`name`,t.team_id from games g left join game_pirod p on p.game_id=g.id left join team t on t.game_id=p.bsid where 1=1 "
     parameter=()
     if countryId!=None:
         sql=sql+" and g.id=%s"
@@ -99,7 +99,7 @@ def syscBisaiData():
     gamesId=request.args.get('gamesId')
     year=request.args.get('year')
     pirod=None
-    if year!=None or year!='undefined':
+    if year!=None and year!='undefined':
         pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s and years=%s order by bsid asc",(countryId,gamesId,year))
     else:
         pirod=dao.selectAll("select years,bsid,lv,lv1 from game_pirod where game_id=%s and name=%s  order by bsid asc",(countryId,gamesId))
@@ -136,8 +136,8 @@ def query(page, pageSize):
     gameId = request.form['gameId']
     countryId = request.form['countryId']
 
-    dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where id=d.first_team_id) as '主队'," \
-              " (select name from team where id=d.second_team_id) as '客队', d.full_score, d.full_concede, d.full_bigsmall, d.half_score," \
+    dataSql = "SELECT d.bisai_id,DATE_FORMAT(d.bs_time,'%Y-%m-%d %H:%i'), (select name from team where team_id=d.first_team_id) as '主队'," \
+              " (select name from team where team_id=d.second_team_id) as '客队', d.full_score, d.full_concede, d.full_bigsmall, d.half_score," \
               " d.half_concede, d.half_bigsmall, p.bocaiGs, p.first_zhudui, p.first_pankou, p.first_cidui, p.finally_zhudui, p.finally_pankou, p.finally_cidui,p.pankouName,first_pankou_alias,finally_pankou_alias"
     fromSql = " FROM game_data d LEFT JOIN pankou p ON d.bisai_id = p.bisaiId WHERE 1=1"
     parameter=()
