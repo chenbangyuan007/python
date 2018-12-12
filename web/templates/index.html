@@ -542,6 +542,9 @@
                 });
             },
             changeLisai:function (v) {
+                if(!v){
+                    return
+                }
                 this.query.year = undefined;
                 this.$http.get('/findYears/' + this.query.countryId+"/"+this.query.gamesId).then(function (res) {
                     this.query.years = res.body
